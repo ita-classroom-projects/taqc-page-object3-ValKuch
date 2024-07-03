@@ -2,24 +2,27 @@ package com.softserve.edu.teachua.pages.club;
 
 import com.softserve.edu.teachua.data.Cities;
 import com.softserve.edu.teachua.pages.top.TopSearchPart;
+import com.softserve.edu.teachua.tools.DriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+
 import java.util.List;
+
 
 public class ClubPage extends TopSearchPart {
 
     private ClubsContainer clubsContainer;
 
-    public ClubPage(WebDriver driver) {
-        super(driver);
+    public ClubPage() {
+        super(DriverManager.getDriver());
         initElements();
     }
 
     private void initElements() {
         // init elements
-        clubsContainer = new ClubsContainer(driver);
+        clubsContainer = new ClubsContainer();
     }
 
     // Page Object
@@ -43,7 +46,7 @@ public class ClubPage extends TopSearchPart {
 
     public void clickPreviousClubPagination() {
         if (!getClubContainer().isEnablePreviousPageLink()) {
-            // TODO Develop Custom Exception
+            // TODO: Develop Custom Exception
             throw new RuntimeException("The previous page is not available");
         }
         getClubContainer().clickPreviousPageLink();
@@ -51,7 +54,7 @@ public class ClubPage extends TopSearchPart {
 
     public void clickNextClubPagination() {
         if (!getClubContainer().isEnableNextPageLink()) {
-            // TODO Develop Custom Exception
+            // TODO: Develop Custom Exception
             throw new RuntimeException("The next page is not available");
         }
         getClubContainer().clickNextPageLink();
@@ -59,26 +62,19 @@ public class ClubPage extends TopSearchPart {
 
     // Business Logic
 
-    /*
-    public ClubPage chooseCity(Cities city) {
-        // Move to TopPart
-        return new ClubPage(driver);
-    }
-    */
-
     public ClubPage previousClubPagination() {
         clickPreviousClubPagination();
-        return new ClubPage(driver);
+        return new ClubPage();
     }
 
     public ClubPage nextClubPagination() {
         clickNextClubPagination();
-        return new ClubPage(driver);
+        return new ClubPage();
     }
 
     public ClubPage chooseClubPaginationNumber(int numberPage) {
         getClubContainer().clickPageLinkByNumber(numberPage);
-        return new ClubPage(driver);
+        return new ClubPage();
     }
 
 }

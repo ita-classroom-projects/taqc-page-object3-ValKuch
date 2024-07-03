@@ -1,6 +1,8 @@
 package com.softserve.edu.teachua.tests;
 
 import com.softserve.edu.teachua.pages.menu.HomePage;
+import com.softserve.edu.teachua.tools.DriverManager;
+import com.softserve.edu.teachua.tools.PropertiesUtils;
 import com.softserve.edu.teachua.wraps.browser.DriverUtils;
 import com.softserve.edu.teachua.wraps.browser.UrlUtils;
 import com.softserve.edu.teachua.wraps.search.SearchStrategy;
@@ -42,7 +44,6 @@ public abstract class TestRunner {
         try {
             Thread.sleep(seconds * ONE_SECOND_DELAY); // For Presentation ONLY
         } catch (InterruptedException e) {
-            // Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -57,29 +58,31 @@ public abstract class TestRunner {
         DriverUtils.quit();
     }
 
-    @BeforeEach
     public void beforeEach() {
-        // SearchStrategy.setImplicitStrategy();
+        WebDriver driver = DriverUtils.addDriverByPartialName(PropertiesUtils.get().readBrowserName());
+        DriverManager.setDriver(driver);
         presentationSleep(); // For Presentation ONLY
     }
+
 
     @AfterEach
     public void afterEach(TestInfo testInfo) {
         if (!isTestSuccessful) {
-            // log
             System.out.println("\t\t\tTest_Name = " + testInfo.getDisplayName() + " fail");
             System.out.println("\t\t\tTest_Method = " + testInfo.getTestMethod() + " fail");
             DriverUtils.takeScreenShot();
             DriverUtils.takePageSource();
         }
-        // logout; clear cache; delete cookie; delete session;
         DriverUtils.deleteCookies();
         DriverUtils.deleteTokens();
+        DriverUtils.quit();
         presentationSleep(); // For Presentation ONLY
     }
 
+
     protected HomePage loadApplication() {
-        DriverUtils.getUrl(UrlUtils.getBaseUrl());
+        WebDriver driver = DriverUtils.getDriver();
+        driver.get(UrlUtils.getBaseUrl());
         return new HomePage();
     }
 }

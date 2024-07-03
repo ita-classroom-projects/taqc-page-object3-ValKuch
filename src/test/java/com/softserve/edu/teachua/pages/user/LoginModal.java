@@ -2,35 +2,39 @@ package com.softserve.edu.teachua.pages.user;
 
 import com.softserve.edu.teachua.pages.menu.HomePage;
 import com.softserve.edu.teachua.pages.top.TopPart;
+import com.softserve.edu.teachua.tools.DriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import com.softserve.edu.teachua.wraps.search.Search;
+import com.softserve.edu.teachua.wraps.search.SearchStrategy;
+
 
 import java.time.Duration;
-import java.util.List;
 
 public class LoginModal {
+
     public static final String POPUP_MESSAGE_UNSUCCESSFULLY = "Введено невірний пароль або email";
 
-    private WebDriver driver;
+    // private WebDriver driver; // Removed
     //
     private WebElement emailInput;
-    //private WebElement emailFeedbackIcon; // TODO
     private WebElement passwordInput;
-    //private WebElement passwordFeedbackIcon; // TODO
     private WebElement signInButton;
+    private final Search search;
 
     public LoginModal(WebDriver driver) {
-        this.driver = driver;
+        // this.driver = driver; // Removed
+        this.search = SearchStrategy.getSearch();
         initElements();
     }
 
     private void initElements() {
-        emailInput = driver.findElement(By.id("basic_email"));
-        passwordInput = driver.findElement(By.id("basic_password"));
-        signInButton = driver.findElement(By.cssSelector("div.login-footer button"));
+        emailInput = search.id("basic_email");
+        passwordInput = search.id("basic_password");
+        signInButton = search.cssSelector("div.login-footer button");
     }
 
     // Page Object
@@ -41,7 +45,7 @@ public class LoginModal {
     }
 
     public String getEmailInputText() {
-        return getEmailInput().getAttribute(TopPart.TAG_ATTRIBUTE_VALUE);
+        return getEmailInput().getAttribute("value");
     }
 
     public void clearEmailInput() {
@@ -62,7 +66,7 @@ public class LoginModal {
     }
 
     public String getPasswordInputText() {
-        return getPasswordInput().getAttribute(TopPart.TAG_ATTRIBUTE_VALUE);
+        return getPasswordInput().getAttribute("value");
     }
 
     public void clearPasswordInput() {
@@ -83,7 +87,7 @@ public class LoginModal {
     }
 
     public String getSignInButtonText() {
-        return getSignInButton().getAttribute(TopPart.TAG_ATTRIBUTE_VALUE);
+        return getSignInButton().getAttribute("value");
     }
 
     public void clickSignInButton() {
@@ -104,7 +108,6 @@ public class LoginModal {
         setPasswordInput(password);
     }
 
-    //public void fillLogin(IUser user) {
     public void fillLogin(String email, String password) {
         enterEmailInput(email);
         enterPasswordInput(password);
@@ -113,43 +116,21 @@ public class LoginModal {
 
     // popupMessageLabel
     public String getPopupMessageLabelText() {
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
-        new WebDriverWait(driver, Duration.ofSeconds(10)).until(
-                new ExpectedCondition<Boolean>() {
-                    public Boolean apply(WebDriver driver) {
-                        WebElement popup = driver.findElement(By.cssSelector(TopPart.POPUP_MESSAGE_CSSSELECTOR));
-                        System.out.println("\tpopup.getText() = " + popup.getText());
-                        return !popup.getText().isEmpty();
-                    }
-                }
-        );
-        //
-        List<WebElement> popupMessageLabel = driver.findElements(By.cssSelector(TopPart.POPUP_MESSAGE_CSSSELECTOR));
-        System.out.println("\tpopupMessageLabel.size() = " + popupMessageLabel.size());
-        System.out.println("\tpopupMessageLabel.get(0).getText() = " + popupMessageLabel.get(0).getText());
-        if (popupMessageLabel.size() == 0) {
-            return "";
-        }
-        return popupMessageLabel.get(0).getText();
+        WebDriver driver = null;
+        new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(TopPart.POPUP_MESSAGE_CSSSELECTOR)));
+        WebElement popupMessageLabel = driver.findElement(By.cssSelector(TopPart.POPUP_MESSAGE_CSSSELECTOR));
+        return popupMessageLabel.getText();
     }
 
     // Business Logic
 
-    //public HomePage successfulLogin(IUser validUser) {
     public HomePage successfulLogin(String email, String password) {
         fillLogin(email, password);
-        //return new HomePage(driver); // TODO Remove
         return new HomePage();
     }
 
-    //public LoginModal unsuccessfulLoginPage(IUser invalidUser) {
     public LoginModal unsuccessfulLoginPage(String email, String password) {
-        //fillLogin(invalidUser);
         fillLogin(email, password);
-        return new LoginModal(driver);
+        return new LoginModal(DriverManager.getDriver());
     }
 }

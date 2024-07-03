@@ -11,35 +11,31 @@ import com.softserve.edu.teachua.pages.menu.NewsPage;
 import com.softserve.edu.teachua.pages.menu.UkrainianServicePage;
 import com.softserve.edu.teachua.pages.user.GuestDropdown;
 import com.softserve.edu.teachua.pages.user.LoginModal;
+import com.softserve.edu.teachua.tools.DriverManager;
+import com.softserve.edu.teachua.wraps.browser.DriverUtils;
 import com.softserve.edu.teachua.wraps.search.Search;
 import com.softserve.edu.teachua.wraps.search.SearchStrategy;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.lang.reflect.Constructor;
+
 import java.time.Duration;
 import java.util.List;
 
 public abstract class TopPart {
     public static final String POPUP_MESSAGE_SUCCESSFULLY = "Ви успішно залогувалися!";
-    //
     public static final String TAG_ATTRIBUTE_VALUE = "value";
     public static final String TAG_ATTRIBUTE_SRC = "src";
     public static final String TAG_ATTRIBUTE_CLASS = "class";
     public static final String TAG_ATTRIBUTE_HREF = "href";
-    //
     public static final String OPTION_NOT_FOUND_MESSAGE = "Option %s not found in %s";
     protected final String OPTION_NULL_MESSAGE = "Dropdown is null";
-    //protected final String PAGE_DO_NOT_EXIST = "Page do not exist.";
-    //
     public static final String POPUP_MESSAGE_CSSSELECTOR = "div.ant-message-notice-wrapper span:last-child";
     protected final String LIST_CHALLENGE_CSSSELECTOR = "a[href*='/challenges']";
     protected final String LIST_CITY_CSSSELECTOR = "ul.ant-dropdown-menu span";
 
-    protected WebDriver driver; // TODO Remove
     protected Search search;
-    //
     private WebElement homeLink;
     private WebElement clubLink;
     private WebElement challengeLink;
@@ -50,37 +46,34 @@ public abstract class TopPart {
     private WebElement caretDropdownLink;
     private WebElement qubStudioLabel;
     private WebElement userProfilePic;
-    //
+
     private DropdownComponent dropdownComponent;
     private GuestDropdown dropdownGuest;
     private LoggedDropdown dropdownLogged;
 
     public TopPart(WebDriver driver) {
-        this.driver = driver; // TODO Remove
         search = SearchStrategy.getSearch();
         initElements();
-        //checkElements();
     }
 
     private void initElements() {
-        // init elements
-        homeLink = driver.findElement(By.cssSelector("div.left-side-menu > a"));
-        clubLink = driver.findElement(By.cssSelector("span.ant-menu-title-content > a[href*='/clubs']"));
-        challengeLink = driver.findElement(By.cssSelector("span.challenge-text"));
-        newsLink = driver.findElement(By.cssSelector("span.ant-menu-title-content > a[href*='/news']"));
-        aboutUsLink = driver.findElement(By.cssSelector("span.ant-menu-title-content > a[href*='/about']"));
-        ukrainianServiceLink = driver.findElement(By.cssSelector("span.ant-menu-title-content > a[href*='/service']"));
-        cityDropdownLink = driver.findElement(By.cssSelector("div.city span.anticon-caret-down"));
-        caretDropdownLink = driver.findElement(By.cssSelector("div.user-profile span.anticon.anticon-caret-down"));
-        qubStudioLabel = driver.findElement(By.cssSelector("div.qubstudio"));
-        userProfilePic = driver.findElement(By.cssSelector("div.user-profile span.ant-avatar"));
+        WebDriver driver = DriverUtils.getDriver();
+        homeLink = search.cssSelector("div.left-side-menu > a");
+        clubLink = search.cssSelector("span.ant-menu-title-content > a[href*='/clubs']");
+        challengeLink = search.cssSelector("span.challenge-text");
+        newsLink = search.cssSelector("span.ant-menu-title-content > a[href*='/news']");
+        aboutUsLink = search.cssSelector("span.ant-menu-title-content > a[href*='/about']");
+        ukrainianServiceLink = search.cssSelector("span.ant-menu-title-content > a[href*='/service']");
+        cityDropdownLink = search.cssSelector("div.city span.anticon-caret-down");
+        caretDropdownLink = search.cssSelector("div.user-profile span.anticon.anticon-caret-down");
+        qubStudioLabel = search.cssSelector("div.qubstudio");
+        userProfilePic = search.cssSelector("div.user-profile span.ant-avatar");
     }
 
     // Page Object
 
     // homeLink
     public WebElement getHomeLink() {
-        //return driver.findElement(By.cssSelector("div.left-side-menu > a"));
         return homeLink;
     }
 
@@ -196,7 +189,6 @@ public abstract class TopPart {
     // dropdownComponent
     protected DropdownComponent getDropdownComponent() {
         if (dropdownComponent == null) {
-            // TODO Develop Custom Exception
             throw new RuntimeException(OPTION_NULL_MESSAGE);
         }
         return dropdownComponent;
@@ -208,20 +200,17 @@ public abstract class TopPart {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        dropdownComponent = new DropdownComponent(driver, searchLocator);
-        //dropdownComponent = new DropdownComponent(searchLocator);
+        dropdownComponent = new DropdownComponent(searchLocator);
         return getDropdownComponent();
     }
 
     private void clickDropdownComponentByPartialName(String optionName) {
         if (!getDropdownComponent().isExistDropdownOptionByPartialName(optionName)) {
-            // TODO Develop Custom Exception
             throw new RuntimeException(String.format(OPTION_NOT_FOUND_MESSAGE, optionName,
                     getDropdownComponent().getListOptionsText().toString()));
         }
         getDropdownComponent().clickDropdownOptionByPartialName(optionName);
         dropdownComponent = null;
-        //closeDropdownComponent();
     }
 
     private void closeDropdownComponent() {
@@ -232,14 +221,13 @@ public abstract class TopPart {
     // dropdownGuest
     protected GuestDropdown getDropdownGuest() {
         if (dropdownGuest == null) {
-            // TODO Develop Custom Exception
             throw new RuntimeException(OPTION_NULL_MESSAGE);
         }
         return dropdownGuest;
     }
 
     private GuestDropdown createDropdownGuest() {
-        dropdownGuest = new GuestDropdown(driver);
+        dropdownGuest = new GuestDropdown();
         return getDropdownGuest();
     }
 
@@ -261,14 +249,13 @@ public abstract class TopPart {
     // dropdownLogged
     protected LoggedDropdown getDropdownLogged() {
         if (dropdownLogged == null) {
-            // TODO Develop Custom Exception
             throw new RuntimeException(OPTION_NULL_MESSAGE);
         }
         return dropdownLogged;
     }
 
     private LoggedDropdown createDropdownLogged() {
-        dropdownLogged = new LoggedDropdown(driver);
+        dropdownLogged = new LoggedDropdown();
         return getDropdownLogged();
     }
 
@@ -327,41 +314,27 @@ public abstract class TopPart {
     private <T> T chooseChallenge(String challengeName, Class<T> clazz) {
         openChallengeDropdownComponent();
         clickDropdownComponentByPartialName(challengeName);
-        //
-        Constructor<T> ctor = null;
-        Object object = null;
+
         try {
-            ctor = clazz.getConstructor(WebDriver.class);
-            object = ctor.newInstance(new Object[]{driver});
+            return clazz.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
-            // TODO Develop Custom Exception
             throw new RuntimeException(e);
         }
-        return (T) object;
-        //
     }
 
     // popupMessageLabel
     public String getPopupMessageLabelText() {
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
-        //
+        WebDriver driver = DriverUtils.getDriver();
         new WebDriverWait(driver, Duration.ofSeconds(10)).until(
                 new ExpectedCondition<Boolean>() {
                     public Boolean apply(WebDriver driver) {
                         WebElement popup = driver.findElement(By.cssSelector(POPUP_MESSAGE_CSSSELECTOR));
-                        System.out.println("\tpopup.getText() = " + popup.getText());
                         return !popup.getText().isEmpty();
                     }
                 }
         );
-        //
+
         List<WebElement> popupMessageLabel = driver.findElements(By.cssSelector(POPUP_MESSAGE_CSSSELECTOR));
-        System.out.println("\tpopupMessageLabel.size() = " + popupMessageLabel.size());
-        System.out.println("\tpopupMessageLabel.get(0).getText() = " + popupMessageLabel.get(0).getText());
         if (popupMessageLabel.size() == 0) {
             return "";
         }
@@ -375,8 +348,7 @@ public abstract class TopPart {
     }
 
     protected void scrollToElement(WebElement webElement) {
-        // Actions action = new Actions(driver);
-        // action.moveToElement(webElement).perform();
+        WebDriver driver = DriverUtils.getDriver();
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", webElement);
     }
 
@@ -384,19 +356,18 @@ public abstract class TopPart {
 
     public HomePage gotoHomePage() {
         clickHomeLink();
-        // return new HomePage(driver); // TODO Remove
         return new HomePage();
     }
 
     public ClubPage gotoClubPage() {
         clickClubLink();
-        return new ClubPage(driver);
+        return new ClubPage();
     }
 
     public ChallengeTeachPage gotoTeachChallengePage() {
         openChallengeDropdownComponent();
         clickDropdownComponentByPartialName("Навчайся");
-        return new ChallengeTeachPage(driver);
+        return new ChallengeTeachPage();
     }
 
     public <T> T gotoChallengePage(String challengeName, Class<T> clazz) {
@@ -410,22 +381,22 @@ public abstract class TopPart {
     public ClubPage chooseCity(Cities city) {
         openCityDropdownComponent();
         clickDropdownComponentByPartialName(city.getCity());
-        return new ClubPage(driver);
+        return new ClubPage();
     }
 
     public NewsPage gotoNewsPage() {
         clickNewsLink();
-        return new NewsPage(driver);
+        return new NewsPage();
     }
 
     public AboutUsPage gotoAboutUsPage() {
         clickAboutUsLink();
-        return new AboutUsPage(driver);
+        return new AboutUsPage();
     }
 
     public UkrainianServicePage gotoUkrainianServicePage() {
         clickUkrainianServiceLink();
-        return new UkrainianServicePage(driver);
+        return new UkrainianServicePage();
     }
 
     // dropdownGuest
@@ -433,7 +404,7 @@ public abstract class TopPart {
         openCaretDropdown();
         createDropdownGuest();
         clickDropdownGuestLogin();
-        return new LoginModal(driver);
+        return new LoginModal(DriverManager.getDriver());
     }
 
     // dropdownLogged
@@ -441,8 +412,6 @@ public abstract class TopPart {
         openCaretDropdown();
         createDropdownLogged();
         clickDropdownLoggedSignout();
-        // return new HomePage(driver); // TODO Remove
         return new HomePage();
     }
-
 }

@@ -11,26 +11,21 @@ public class SearchExplicitPresent extends SearchExplicit {
 
     @Override
     public WebElement getWebElement(By by) {
-        // TODO
-        return null;
+        return getDriverWait().until(ExpectedConditions.presenceOfElementLocated(by));
     }
 
     @Override
     public WebElement getWebElement(By by, WebElement fromWebElement) {
-        // TODO
-        return null;
+        return getDriverWait().until(ExpectedConditions.presenceOfNestedElementLocatedBy(fromWebElement, by));
     }
 
     @Override
     public List<WebElement> getWebElements(By by) {
-        // TODO
-        return null;
+        return getDriverWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
     }
 
     @Override
     public List<WebElement> getWebElements(By by, WebElement fromWebElement) {
-        // TODO
-        return null;
+        return getDriverWait().until(ExpectedConditions.presenceOfNestedElementsLocatedBy((By) fromWebElement, by));
     }
-
 }

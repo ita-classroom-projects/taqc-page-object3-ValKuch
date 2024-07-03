@@ -2,35 +2,26 @@ package com.softserve.edu.teachua.pages.menu;
 
 import com.softserve.edu.teachua.pages.top.TopSearchPart;
 import com.softserve.edu.teachua.pages.user.LoginModal;
-import com.softserve.edu.teachua.wraps.browser.DriverUtils;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+import com.softserve.edu.teachua.tools.DriverManager;
 import org.openqa.selenium.WebElement;
-
+import com.softserve.edu.teachua.wraps.search.Search;
+import com.softserve.edu.teachua.wraps.search.SearchStrategy;
 public class HomePage extends TopSearchPart {
 
     public static final String BEGIN_TEACH_LABEL_MESSAGE = "Ініціатива";
 
     private WebElement addClubButton;
     private WebElement teachLabel;
-
-    /*
-    public HomePage(WebDriver driver) {
-        super(driver);
-        initElements();
-    }
-    */
+    private final Search search;
 
     public HomePage() {
-        super(DriverUtils.getDriver());
+        super(DriverManager.getDriver());
+        this.search = SearchStrategy.getSearch();
         initElements();
     }
 
     private void initElements() {
         // init elements
-        //addClubButton = driver.findElement(By.cssSelector("button.add-club-button"));
-        //teachLabel = driver.findElement(By.cssSelector("div.city-name-box h2.city-name"));
-        //
         addClubButton = search.cssSelector("button.add-club-button");
         teachLabel = search.cssSelector("div.city-name-box h2.city-name");
     }
@@ -66,14 +57,7 @@ public class HomePage extends TopSearchPart {
     // addClubButton
     public LoginModal openLoginModalAddClub() {
         clickAddClubButton();
-        return new LoginModal(driver);
+        return new LoginModal(DriverManager.getDriver());
     }
-
-    /* // Next
-    public AddClubModal openAddClubModal() {
-        clickAddClubButton();
-        return new AddClubModal(driver);
-    }
-    */
 
 }

@@ -4,18 +4,22 @@ import com.softserve.edu.teachua.pages.top.TopSearchPart;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import com.softserve.edu.teachua.wraps.search.Search;
+import com.softserve.edu.teachua.wraps.search.SearchStrategy;
 
 public class AdvancedClubPage extends ClubPage {
 
     private WebElement advancedSearchLabel;
+    private final Search search;
 
-    public AdvancedClubPage(WebDriver driver) {
-        super(driver);
+    public AdvancedClubPage() {
+        super();
+        this.search = SearchStrategy.getSearch();
         initElements();
     }
 
     private void initElements() {
-        advancedSearchLabel = driver.findElement(By.cssSelector("div.ant-layout-sider-children > div.club-list-label"));
+        advancedSearchLabel = search.cssSelector("div.ant-layout-sider-children > div.club-list-label");
     }
 
     // Page Object
@@ -36,12 +40,12 @@ public class AdvancedClubPage extends ClubPage {
     @Override
     public AdvancedClubPage previousClubPagination() {
         clickPreviousClubPagination();
-        return new AdvancedClubPage(driver);
+        return this;
     }
 
     @Override
     public AdvancedClubPage nextClubPagination() {
         clickNextClubPagination();
-        return new AdvancedClubPage(driver);
+        return this;
     }
 }

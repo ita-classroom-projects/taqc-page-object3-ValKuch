@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.softserve.edu.teachua.tools.DriverManager;
 import com.softserve.edu.teachua.tools.PropertiesUtils;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.JavascriptExecutor;
@@ -24,8 +25,6 @@ import org.openqa.selenium.WebDriver;
 public final class DriverUtils {
     private static final String TIME_TEMPLATE = "yyyy-MM-dd_HH-mm-ss-S";
     private static final String LOCALSTORAGE_REMOVE_ITEM = "window.localStorage.removeItem('%s');";
-    //
-    private static Map<Long, WebDriver> drivers = new HashMap<>();
     private static Browsers defaultBrowser;
 
     static {
@@ -66,13 +65,13 @@ public final class DriverUtils {
     }
 
     public static WebDriver addDriver(Browsers browser) {
-        drivers.put(Thread.currentThread().getId(), browser.runBrowser());
-        return drivers.get(Thread.currentThread().getId());
+        WebDriver driver = browser.runBrowser();
+        DriverManager.setDriver(driver);
+        return driver;
     }
-    
+
     public static WebDriver getDriver() {
-        WebDriver driver = drivers.get(Thread.currentThread().getId());
-        //
+        WebDriver driver = DriverManager.getDriver();
         if (driver == null) {
             driver = addDriver(defaultBrowser);
         }
@@ -100,16 +99,14 @@ public final class DriverUtils {
     }
 
     public static void takeScreenShot() {
-        //String currentTime = new SimpleDateFormat(TIME_TEMPLATE).format(new Date());
         LocalDateTime localDate = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TIME_TEMPLATE);
         String currentTime = localDate.format(formatter);
-        //
+
         File scrFile = ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.FILE);
         try {
             FileUtils.copyFile(scrFile, new File("./" + currentTime + "_screenshot.png"));
         } catch (IOException e) {
-            // Log.error
             throw new RuntimeException(e);
         }
     }
@@ -122,7 +119,6 @@ public final class DriverUtils {
         try {
             Files.write(path, strToBytes, StandardOpenOption.CREATE);
         } catch (IOException e) {
-            // Log.error
             throw new RuntimeException(e);
         }
     }
@@ -138,13 +134,10 @@ public final class DriverUtils {
     }
 
     public static void quit() {
-//        if (driver != null) {
-//            driver.quit();
-//        }
-        for (Map.Entry<Long, WebDriver> driverEntry : drivers.entrySet()) {
-            if (driverEntry.getValue() != null) {
-                driverEntry.getValue().quit();
-            }
+        WebDriver driver = DriverManager.getDriver();
+        if (driver != null) {
+            driver.quit();
         }
+        DriverManager.removeDriver();
     }
 }

@@ -3,25 +3,29 @@ package com.softserve.edu.teachua.pages.top;
 import com.softserve.edu.teachua.pages.club.AdvancedClubPage;
 import com.softserve.edu.teachua.pages.club.ClubNotFoundPage;
 import com.softserve.edu.teachua.pages.club.ClubPage;
-import org.openqa.selenium.By;
+import com.softserve.edu.teachua.tools.DriverManager;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import com.softserve.edu.teachua.wraps.search.Search;
+import com.softserve.edu.teachua.wraps.search.SearchStrategy;
 
 public abstract class TopSearchPart extends TopPart {
 
     private WebElement searchInput;
     private WebElement advancedSearchButton;
+    private final Search search;
 
     public TopSearchPart(WebDriver driver) {
-        super(driver);
+        super(DriverManager.getDriver());
+        this.search = SearchStrategy.getSearch();
         initElements();
     }
 
     private void initElements() {
         // init elements
-        searchInput = driver.findElement(By.cssSelector("input.ant-select-selection-search-input"));
-        advancedSearchButton = driver.findElement(By.cssSelector("span.advanced-icon[aria-label='control']"));
+        searchInput = search.cssSelector("input.ant-select-selection-search-input");
+        advancedSearchButton = search.cssSelector("span.advanced-icon[aria-label='control']");
     }
 
     // Page Object
@@ -69,17 +73,17 @@ public abstract class TopSearchPart extends TopPart {
 
     public ClubPage successfulSearchClub(String searchText) {
         fillSearchInput(searchText);
-        return new ClubPage(driver);
+        return new ClubPage();
     }
 
     public ClubNotFoundPage unsuccessfulSearchClub(String searchText) {
         fillSearchInput(searchText);
-        return new ClubNotFoundPage(driver);
+        return new ClubNotFoundPage();
     }
 
     public AdvancedClubPage gotoAdvancedClubPage() {
         clickAdvancedSearchButton();
-        return new AdvancedClubPage(driver);
+        return new AdvancedClubPage();
     }
 
 }

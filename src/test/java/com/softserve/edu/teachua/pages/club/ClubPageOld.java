@@ -1,27 +1,34 @@
 package com.softserve.edu.teachua.pages.club;
 
 import com.softserve.edu.teachua.pages.top.TopSearchPart;
-import org.openqa.selenium.By;
+import com.softserve.edu.teachua.tools.DriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import com.softserve.edu.teachua.wraps.search.Search;
+import com.softserve.edu.teachua.wraps.search.SearchStrategy;
 
 // Only one club page. Update next time
+
+
 public class ClubPageOld extends TopSearchPart {
+    private WebDriver driver;
 
     private WebElement clubTitleLink;
     private WebElement clubDescriptionLabel;
     private WebElement clubDetailsLink;
+    private final Search search;
 
-    public ClubPageOld(WebDriver driver) {
-        super(driver);
+    public ClubPageOld() {
+        super(DriverManager.getDriver());
+        this.search = SearchStrategy.getSearch();
         initElements();
     }
 
     private void initElements() {
         // init elements
-        clubTitleLink = driver.findElement(By.cssSelector("div.ant-card.ant-card-bordered.card div.name"));
-        clubDescriptionLabel = driver.findElement(By.cssSelector("p.description"));
-        clubDetailsLink = driver.findElement(By.cssSelector("a.details-button > a"));
+        clubTitleLink = search.cssSelector("div.ant-card.ant-card-bordered.card div.name");
+        clubDescriptionLabel = search.cssSelector("p.description");
+        clubDetailsLink = search.cssSelector("a.details-button > a");
     }
 
     // Page Object
@@ -76,7 +83,6 @@ public class ClubPageOld extends TopSearchPart {
 
     public ClubDetailsPage gotoClubDetailsPage() {
         clickClubDetailsLink();
-        return new ClubDetailsPage(driver);
+        return new ClubDetailsPage();
     }
-
 }

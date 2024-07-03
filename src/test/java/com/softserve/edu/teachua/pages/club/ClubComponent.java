@@ -1,15 +1,17 @@
 package com.softserve.edu.teachua.pages.club;
 
-import org.openqa.selenium.By;
+import com.softserve.edu.teachua.tools.DriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import com.softserve.edu.teachua.wraps.search.Search;
+import com.softserve.edu.teachua.wraps.search.SearchStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClubComponent {
 
-    protected WebDriver driver;
+    private WebDriver driver;
     private WebElement clubCard;
     //
     private WebElement titleLink;
@@ -17,20 +19,23 @@ public class ClubComponent {
     private WebElement descriptionLabel;
     private WebElement addressLabel;
     private WebElement detailsButton;
+    private final Search search;
+
 
     public ClubComponent(WebDriver driver, WebElement clubCard) {
-        this.driver = driver;
+        this.driver = DriverManager.getDriver();
         this.clubCard = clubCard;
+        this.search = SearchStrategy.getSearch();
         initElements();
     }
 
     private void initElements() {
         // init elements
-        titleLink = clubCard.findElement(By.cssSelector("div.title"));
-        categoriesLabel = clubCard.findElements(By.cssSelector("div.tags.club-tags span.name"));
-        descriptionLabel = clubCard.findElement(By.cssSelector("p.description"));
-        addressLabel = clubCard.findElement(By.cssSelector("div.address"));
-        detailsButton = clubCard.findElement(By.cssSelector("a.details-button > a"));
+        titleLink = search.cssSelector("div.title", clubCard);
+        categoriesLabel = search.cssSelectors("div.tags.club-tags span.name", clubCard);
+        descriptionLabel = search.cssSelector("p.description", clubCard);
+        addressLabel = search.cssSelector("div.address", clubCard);
+        detailsButton = search.cssSelector("a.details-button > a", clubCard);
     }
 
     // Page Object
@@ -103,7 +108,7 @@ public class ClubComponent {
 
     public ClubDetailsPage openClubDetailsPage() {
         clickDetailsButton();
-        return new ClubDetailsPage(driver);
+        return new ClubDetailsPage();
     }
 
 }

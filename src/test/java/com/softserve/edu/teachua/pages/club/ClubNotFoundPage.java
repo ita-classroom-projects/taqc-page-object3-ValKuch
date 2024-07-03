@@ -1,23 +1,27 @@
 package com.softserve.edu.teachua.pages.club;
 
 import com.softserve.edu.teachua.pages.top.TopSearchPart;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+import com.softserve.edu.teachua.tools.DriverManager;
 import org.openqa.selenium.WebElement;
+import com.softserve.edu.teachua.wraps.search.Search;
+import com.softserve.edu.teachua.wraps.search.SearchStrategy;
 
 public class ClubNotFoundPage extends TopSearchPart {
-    public static String NOT_FOUND_MASSAGE = "За критеріями пошуку гуртків не знайдено";
+
+    public static String NOT_FOUND_MESSAGE = "За критеріями пошуку гуртків не знайдено";
 
     private WebElement notFoundLabel;
+    private final Search search;
 
-    public ClubNotFoundPage(WebDriver driver) {
-        super(driver);
+    public ClubNotFoundPage() {
+        super(DriverManager.getDriver());
+        this.search = SearchStrategy.getSearch();
         initElements();
     }
 
     private void initElements() {
-        // init elements
-        notFoundLabel = driver.findElement(By.cssSelector("div.clubs-not-found"));
+        // Initialize elements
+        notFoundLabel = search.cssSelector("div.clubs-not-found");
     }
 
     // Page Object

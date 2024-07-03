@@ -1,32 +1,30 @@
 package com.softserve.edu.teachua.pages.club;
 
-import org.openqa.selenium.By;
+import com.softserve.edu.teachua.pages.top.TopPart;
+import com.softserve.edu.teachua.tools.DriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
+import com.softserve.edu.teachua.wraps.search.Search;
+import com.softserve.edu.teachua.wraps.search.SearchStrategy;
 
 public class ClubCommentModal {
 
     private WebDriver driver;
-
     private WebElement rateStar5Link;
     private WebElement typeCommentArea;
     private WebElement sendCommentButton;
+    private final Search search;
 
     public ClubCommentModal(WebDriver driver) {
-        this.driver = driver;
+        this.driver = DriverManager.getDriver();
+        this.search = SearchStrategy.getSearch();
         initElements();
     }
 
     private void initElements() {
-        // init elements
-        rateStar5Link = driver.findElement(By.cssSelector("div.ant-form-item div[aria-posinset='5']"));
-        typeCommentArea = driver.findElement(By.id("comment-edit_commentText"));
-        sendCommentButton = driver.findElement(By.cssSelector("button.do-comment-button"));
+        rateStar5Link = search.cssSelector("div.ant-form-item div[aria-posinset='5']");
+        typeCommentArea = search.id("comment-edit_commentText");
+        sendCommentButton = search.cssSelector("button.do-comment-button");
     }
 
     // Page Object
@@ -46,7 +44,7 @@ public class ClubCommentModal {
     }
 
     public String getTypeCommentAreaText() {
-        return getTypeCommentArea().getText();
+        return getTypeCommentArea().getAttribute(TopPart.TAG_ATTRIBUTE_VALUE);
     }
 
     public void clearTypeCommentArea() {
@@ -86,19 +84,17 @@ public class ClubCommentModal {
         clickRateStar5Link();
         enterCommentArea(commentText);
         clickSendCommentButton();
-        //
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        //
     }
 
     // Business Logic
 
     public ClubDetailsPage submitComment(String commentText) {
         acceptComment(commentText);
-        return new ClubDetailsPage(driver);
+        return new ClubDetailsPage();
     }
 }

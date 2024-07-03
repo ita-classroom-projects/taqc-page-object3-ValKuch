@@ -6,6 +6,8 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import com.softserve.edu.teachua.wraps.search.Search;
+import com.softserve.edu.teachua.wraps.search.SearchStrategy;
 
 public class DropdownComponent {
 
@@ -14,16 +16,17 @@ public class DropdownComponent {
     protected WebDriver driver;
     //
     private List<WebElement> listOptions;
+    private final Search search;
 
-    public DropdownComponent(WebDriver driver, By searchLocator) {
+    public DropdownComponent(By searchLocator) {
         this.driver = driver;
+        this.search = SearchStrategy.getSearch();
         initElements(searchLocator);
     }
 
     private void initElements(By searchLocator) {
-        listOptions = driver.findElements(searchLocator);
+        listOptions = search.getWebElements(searchLocator);
     }
-
     // Page Object
 
     // listOptions

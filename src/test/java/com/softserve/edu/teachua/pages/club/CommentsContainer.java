@@ -3,6 +3,8 @@ package com.softserve.edu.teachua.pages.club;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import com.softserve.edu.teachua.wraps.search.Search;
+import com.softserve.edu.teachua.wraps.search.SearchStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +18,12 @@ public class CommentsContainer {
     //
     private List<CommentComponent> commentComponents;
     private WebElement showMoreButton;
+    private final Search search;
+
 
     public CommentsContainer(WebDriver driver) {
         this.driver = driver;
+        this.search = SearchStrategy.getSearch();
         initElements();
     }
 
@@ -29,7 +34,7 @@ public class CommentsContainer {
             commentComponents.add(new CommentComponent(driver, current));
         }
         if (getCommentComponents().size() > 0) {
-            showMoreButton = driver.findElement(By.cssSelector("button.show-more-button"));
+            showMoreButton = search.cssSelector("button.show-more-button");
         }
     }
 

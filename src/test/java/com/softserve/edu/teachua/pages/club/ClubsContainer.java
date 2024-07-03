@@ -4,6 +4,9 @@ import com.softserve.edu.teachua.pages.top.TopPart;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import com.softserve.edu.teachua.tools.DriverManager;
+import com.softserve.edu.teachua.wraps.search.Search;
+import com.softserve.edu.teachua.wraps.search.SearchStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,20 +15,20 @@ public class ClubsContainer {
 
     public final String CLUBS_NOT_FOUND = "There is no club that matches the search criteria.";
     private final String CLUBS_COMPONENT_CSSSELECTOR = "div.ant-card.ant-card-bordered";
-    //private final String PAGINATION_NUMBERS = "li[title='%d'] > a";
     private final String PAGINATION_NUMBERS_XPATHSELECTOR =
             "//li[contains(@class,'ant-pagination-item')]/a[text()='%d']";
-    //
+
     protected WebDriver driver;
-    //
     private List<ClubComponent> clubComponents;
     private WebElement previousItem;
     private WebElement nextItem;
     private WebElement previousPageLink;
     private WebElement nextPageLink;
+    private final Search search;
 
-    public ClubsContainer(WebDriver driver) {
-        this.driver = driver;
+    public ClubsContainer() {
+        this.driver = DriverManager.getDriver();
+        this.search = SearchStrategy.getSearch();
         initElements();
     }
 
@@ -43,10 +46,10 @@ public class ClubsContainer {
         if (clubComponents.size() == 0) {
             throw new RuntimeException(CLUBS_NOT_FOUND);
         }
-        previousItem = driver.findElement(By.cssSelector("li[title='Previous Page']"));
-        nextItem = driver.findElement(By.cssSelector("li[title='Next Page']"));
-        previousPageLink = driver.findElement(By.cssSelector("li[title='Previous Page'] > button"));
-        nextPageLink = driver.findElement(By.cssSelector("li[title='Next Page'] > button"));
+        previousItem = search.cssSelector("li[title='Previous Page']");
+        nextItem = search.cssSelector("li[title='Next Page']");
+        previousPageLink = search.cssSelector("li[title='Previous Page'] > button");
+        nextPageLink = search.cssSelector("li[title='Next Page'] > button");
     }
 
     // Page Object
@@ -68,7 +71,6 @@ public class ClubsContainer {
 
     public boolean isEnablePreviousPageLink() {
         return !getPreviousItemClassAttribute().contains("pagination-disabled");
-        //return true;
     }
 
     // nextItem
@@ -82,7 +84,6 @@ public class ClubsContainer {
 
     public boolean isEnableNextPageLink() {
         return !getNextItemClassAttribute().contains("pagination-disabled");
-        //return true;
     }
 
     // previousPageLink
@@ -127,25 +128,20 @@ public class ClubsContainer {
 
     public ClubComponent getFirstClubComponent() {
         if (getClubComponentsCount() == 0) {
-            // TODO Develop Custom Exception
-            // Use String.format()
             throw new RuntimeException(CLUBS_NOT_FOUND);
         }
-        return  getClubComponents().get(0);
+        return getClubComponents().get(0);
     }
 
     public ClubComponent getClubComponentByTitle(String clubTitle) {
         ClubComponent result = null;
         for (ClubComponent current : getClubComponents()) {
-            if (current.getTitleLinkText().toLowerCase()
-                    .equals(clubTitle.toLowerCase())) {
+            if (current.getTitleLinkText().toLowerCase().equals(clubTitle.toLowerCase())) {
                 result = current;
                 break;
             }
         }
         if (result == null) {
-            // TODO Develop Custom Exception
-            // Use String.format()
             throw new RuntimeException("ClubTitle: " + clubTitle + " not Found.");
         }
         return result;
@@ -154,15 +150,12 @@ public class ClubsContainer {
     public ClubComponent getClubComponentByPartialTitle(String partialTitle) {
         ClubComponent result = null;
         for (ClubComponent current : getClubComponents()) {
-            if (current.getTitleLinkText().toLowerCase()
-                    .contains(partialTitle.toLowerCase())) {
+            if (current.getTitleLinkText().toLowerCase().contains(partialTitle.toLowerCase())) {
                 result = current;
                 break;
             }
         }
         if (result == null) {
-            // TODO Develop Custom Exception
-            // Use String.format()
             throw new RuntimeException("Club partialTitle: " + partialTitle + " not Found.");
         }
         return result;
@@ -180,7 +173,6 @@ public class ClubsContainer {
     }
 
     public void clickPageLinkByNumber(int numberPage) {
-        WebElement pageLink = null;
         List<WebElement> paginationNumbers = driver.findElements(By
                 .xpath(String.format(PAGINATION_NUMBERS_XPATHSELECTOR, numberPage)));
         if (paginationNumbers.size() > 0) {
@@ -192,4 +184,3 @@ public class ClubsContainer {
     // Business Logic
 
 }
-

@@ -1,43 +1,37 @@
 package com.softserve.edu.teachua.pages.club;
 
 import com.softserve.edu.teachua.pages.top.TopPart;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+import com.softserve.edu.teachua.tools.DriverManager;
 import org.openqa.selenium.WebElement;
+import com.softserve.edu.teachua.wraps.search.Search;
+import com.softserve.edu.teachua.wraps.search.SearchStrategy;
+
+import static com.softserve.edu.teachua.tools.DriverManager.getDriver;
 
 public class ClubDetailsPage extends TopPart {
 
     private CommentsContainer commentsContainer;
-    //
     private WebElement createCommentButton;
-    //
-    //private WebElement authorContentLabel;
-    //private WebElement datetimeLabel;
-    //private WebElement commentContentLabel;
+    private final Search search;
 
-    public ClubDetailsPage(WebDriver driver) {
-        super(driver);
+    public ClubDetailsPage() {
+        super(DriverManager.getDriver());
+        this.search = SearchStrategy.getSearch();
         initElements();
     }
 
     private void initElements() {
-        // init elements
-        commentsContainer = new CommentsContainer(driver);
-        createCommentButton = driver.findElement(By.cssSelector("button.comment-button"));
-        //
-        //authorContentLabel = driver.findElement(By.cssSelector("div.ant-spin-container li:first-child div.author-content > span.name"));
-        //datetimeLabel = driver.findElement(By.cssSelector("div.ant-spin-container li:first-child div.author-content > span.datetime"));
-        //commentContentLabel = driver.findElement(By.cssSelector("div.ant-spin-container li:first-child div.ant-comment-content-detail > p"));
+        // Initialize elements here
+        commentsContainer = new CommentsContainer(DriverManager.getDriver());
+        createCommentButton = search.cssSelector("button.comment-button");
     }
 
     // Page Object
 
-    // commentsContainer
     public CommentsContainer getCommentsContainer() {
         return commentsContainer;
     }
 
-    // createCommentButton
     public WebElement getCreateCommentButton() {
         return createCommentButton;
     }
@@ -56,7 +50,9 @@ public class ClubDetailsPage extends TopPart {
 
     public ClubCommentModal openClubCommentModal() {
         clickCreateCommentButton();
-        return new ClubCommentModal(driver);
+        return new ClubCommentModal(getDriver());
     }
 
+    // Overridden methods from TopPart can be left unchanged
 }
+

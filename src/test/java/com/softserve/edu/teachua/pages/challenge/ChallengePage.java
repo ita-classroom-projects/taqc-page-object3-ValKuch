@@ -1,21 +1,25 @@
 package com.softserve.edu.teachua.pages.challenge;
 
 import com.softserve.edu.teachua.pages.top.TopSearchPart;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+import com.softserve.edu.teachua.tools.DriverManager;
+import com.softserve.edu.teachua.wraps.search.Search;
+import com.softserve.edu.teachua.wraps.search.SearchStrategy;
 import org.openqa.selenium.WebElement;
 
 public abstract class ChallengePage extends TopSearchPart {
 
     private WebElement bannerLabel;
+    private final Search search;
 
-    public ChallengePage(WebDriver driver) {
-        super(driver);
+
+    public ChallengePage() {
+        super(DriverManager.getDriver());
+        this.search = SearchStrategy.getSearch();
         initElements();
     }
 
     private void initElements() {
-        bannerLabel = driver.findElement(By.cssSelector("div.banner span.title"));
+        bannerLabel = search.cssSelector("div.banner span.title");
     }
 
     // Page Object

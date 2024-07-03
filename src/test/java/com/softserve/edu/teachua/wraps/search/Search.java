@@ -12,7 +12,7 @@ public abstract class Search {
 
     protected abstract WebElement getWebElement(By by, WebElement fromWebElement);
 
-    protected abstract List<WebElement> getWebElements(By by);
+    public abstract List<WebElement> getWebElements(By by);
 
     protected abstract List<WebElement> getWebElements(By by, WebElement fromWebElement);
 

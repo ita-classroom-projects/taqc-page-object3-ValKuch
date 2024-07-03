@@ -3,6 +3,8 @@ package com.softserve.edu.teachua.pages.club;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import com.softserve.edu.teachua.wraps.search.Search;
+import com.softserve.edu.teachua.wraps.search.SearchStrategy;
 
 public class CommentComponent {
 
@@ -12,18 +14,20 @@ public class CommentComponent {
     private WebElement authorLabel;
     private WebElement datetimeLabel;
     private WebElement commentLabel;
+    private final Search search;
 
     public CommentComponent(WebDriver driver, WebElement clubCard) {
         this.driver = driver;
         this.clubCard = clubCard;
+        this.search = SearchStrategy.getSearch();
         initElements();
     }
 
     private void initElements() {
         // init elements
-        authorLabel = driver.findElement(By.cssSelector("div.author-content > span.name"));
-        datetimeLabel = driver.findElement(By.cssSelector("div.author-content > span.datetime"));
-        commentLabel = driver.findElement(By.cssSelector("div.ant-comment-content-detail > p"));
+        authorLabel = search.cssSelector("div.author-content > span.name");
+        datetimeLabel = search.cssSelector("div.author-content > span.datetime");
+        commentLabel = search.cssSelector("div.ant-comment-content-detail > p");
     }
 
     // Page Object
